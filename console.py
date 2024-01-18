@@ -2,6 +2,7 @@
 """ Console Module """
 import cmd
 import sys
+import shlex
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -19,8 +20,12 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-		'BaseModel': BaseModel, 'User': User, 'Place': Place,
-        'State': State, 'City': City, 'Amenity': Amenity,
+		'BaseModel': BaseModel,
+		'User': User,
+		'Place': Place,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
         'Review': Review
 	}
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
@@ -115,7 +120,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        """if not args:
             print("** class name missing **")
             return
         elif args not in HBNBCommand.classes:
@@ -124,7 +129,58 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[args]()
         storage.save()
         print(new_instance.id)
-        storage.save()
+        storage.save()"""
+
+        """
+        Update the def do_create(self, arg): function of your command interpreter (console.py) to allow for object creation with given parameters:
+
+		Command syntax: create <Class name> <param 1> <param 2> <param 3>...
+		Param syntax: <key name>=<value>
+		Value syntax:
+		String: "<value>" => starts with a double quote
+		any double quote inside the value must be escaped with a backslash \
+		all underscores _ must be replace by spaces . Example: You want to set the string My little house to the attribute name, your command line must be name="My_little_house"
+		Float: <unit>.<decimal> => contains a dot .
+		Integer: <number> => default case
+		If any parameter doesn’t fit with these requirements or can’t be recognized correctly by your program, it must be skipped
+        """
+        args = shlex.split(args)
+        if not args:
+            print("** class name missing ***")
+
+        class_name = args[0]
+        if class_name not in self.classes:
+            print("** class does't exist **")
+            return
+        args = args[1:]
+
+        if not args:
+        	print("** no attributes given **")
+
+        params = {}
+
+        for param in args:
+            key_value = param.split('=')
+
+            if len(key_value) != 2:
+                print(f"Invalid parameter format: {param}. Skipping.")
+                continue
+            key, value = key_value
+            try:
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('\\"', '"').replace('_', ' ')
+                elif '.' in value:
+                    value = float(value)
+                else:
+                    value = int(value)
+                    
+                params[key] = value
+            
+            except ValueError:
+                print(f"Invalid value for parameter {key}: {value}. Skipping.")
+        obj = classes[class_name](**params)
+        obj.save()
+        print(obj.id)
 
     def help_create(self):
         """ Help information for the create method """
