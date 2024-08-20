@@ -7,6 +7,17 @@ from models.user import User
 from io import StringIO
 
 class TestConsoleCreateCommand(unittest.TestCase):
+    """
+    This class contains unit tests for the create command in the HBNBCommand class.
+    Methods:
+    - setUp: Method that runs before each test method to set up the necessary objects.
+    - tearDown: Method that runs after each test method to clean up the created objects.
+    - test_Create_basic: Method that tests the create command with basic usage.
+    - test_create_with_params: Method that tests the create command with parameters.
+    - test_create_invalid_params: Method that tests the create command with invalid parameters.
+    - test_create_invalid_value: Method that tests the create command with an invalid value.
+    - test_create_with_float_param: Method that tests the create command with a float parameter.
+    """
     def setUp(self):
         self.console = HBNBCommand()
         self.test_objects = []
@@ -20,7 +31,7 @@ class TestConsoleCreateCommand(unittest.TestCase):
         with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
             self.console.onecmd("create BaseModel")
             obj_id = mock_stdout.getvalue().strip()
-            self.test_objects.append(storage.get('BaseModel', obj_id))
+            self.test_objects.append(storage.get(BaseModel, obj_id))
             self.assertIsInstance(storage.get('BaseModel', obj_id), BaseModel)
 
     def test_create_with_params(self):
