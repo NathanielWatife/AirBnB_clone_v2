@@ -17,7 +17,7 @@ class TestConsoleCreateCommand(unittest.TestCase):
         self.test_objects = []
         
     def test_Create_basic(self):
-        with patch('sys.stdout', new_callable-StringIO) as mokc_stdout:
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
             self.console.onecmd("create BaseModel")
             obj_id = mock_stdout.getvalue().strip()
             self.test_objects.append(storage.get('BaseModel', obj_id))

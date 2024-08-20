@@ -178,7 +178,7 @@ class HBNBCommand(cmd.Cmd):
             
             except ValueError:
                 print(f"Invalid value for parameter {key}: {value}. Skipping.")
-        obj = classes[class_name](**params)
+        obj = self.classes[class_name](**params)
         obj.save()
         print(obj.id)
 
